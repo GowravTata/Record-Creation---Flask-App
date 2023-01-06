@@ -1,0 +1,11 @@
+flask
+Flask-HTTPAuth
+redis
+pymongo
+requests
+Flask-JWT-Extended
+swagger-ui-py
+nose
+coverage
+MarkupSafe
+
