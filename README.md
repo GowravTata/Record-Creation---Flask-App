@@ -2,8 +2,8 @@ If using Docker
 
 The commands are as follows
 
-1. sudo docker build -t yourusername/repositoryname:versionnumber
-2. sudo docker run -d -p 5000:5000 yourusername/repositoryname:versionnumber
+1. sudo docker build -t recordapp . 
+2. sudo docker container run -d -p 5000:5000 recordapp
 
 In your browser Navigate to localhost:5000/docs
 
