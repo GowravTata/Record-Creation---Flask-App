@@ -1,4 +1,4 @@
-FROM python:3.6.1-alpine
+FROM python:3.8
 
 # defining the directory
 WORKDIR /work
@@ -10,7 +10,7 @@ RUN pip install --upgrade pip
 
 RUN pip install -r requirements.txt
 
-
+EXPOSE 5000
 ENTRYPOINT ["python"]
 # command to start the container
-CMD ["run.py"]
+CMD python ./run.py
