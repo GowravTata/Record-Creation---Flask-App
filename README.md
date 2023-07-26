@@ -2,19 +2,20 @@ Clone the branch
 Run the command as follows
 
 
-```console
-git clone https://github.com/GowravTata/Record-Creation---Flask-App.git
+
+`git clone https://github.com/GowravTata/Record-Creation---Flask-App.git
 cd Record-Creation---Flask-App
-docker-compose up -d
-```
+docker-compose up -d`
+
 
 or 
 
 
-`
-git clone https://github.com/GowravTata/Record-Creation---Flask-App.git \n
-cd Record-Creation---Flask-App \n
-./run.sh`
+```console
+git clone https://github.com/GowravTata/Record-Creation---Flask-App.git 
+cd Record-Creation---Flask-App 
+./run.sh
+```
 
 
 In your browser Navigate to 0.0.0.0:5000/docs
