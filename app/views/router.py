@@ -6,7 +6,6 @@ import http
 from datetime import timedelta
 
 # Third Party Library
-import redis
 from flask import Flask, jsonify, make_response, request
 from flask_httpauth import HTTPBasicAuth
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required
@@ -22,10 +21,6 @@ app = Flask(__name__)
 app.config["JWT_SECRET_KEY"] = "super-secret"
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = ACCESS_EXPIRES
 jwt = JWTManager(app)
-
-jwt_redis_blocklist = redis.StrictRedis(
-    host="localhost", port=6379, db=0, decode_responses=True
-)
 
 api_doc(app, config_path='app/views/swagger.yaml', url_prefix='/docs', title='API doc')
 
@@ -82,11 +77,11 @@ def route_v1(id=None):
         else:
             response = mongo.fetch_record(id=id)
         return response
-    except (KeyError, InvalidPayloadException) as e:
-        return make_response(jsonify({'Error': str(e.args[0])}), http.HTTPStatus.BAD_REQUEST)
-    except RecordInExistenceError as e:
-        return make_response(jsonify({'Error': str(e)}), http.HTTPStatus.NOT_FOUND)
-    except RecordExistenceError as e:
-        return make_response(jsonify({'Error': str(e)}), http.HTTPStatus.CONFLICT)
-    except Exception as e:
-        return make_response(jsonify({'Error': str(e)}), http.HTTPStatus.INTERNAL_SERVER_ERROR)
+    except (KeyError, InvalidPayloadException) as error:
+        return make_response(jsonify({'Error': str(error.args[0])}), http.HTTPStatus.BAD_REQUEST)
+    except RecordInExistenceError as error:
+        return make_response(jsonify({'Error': str(error)}), http.HTTPStatus.NOT_FOUND)
+    except RecordExistenceError as error:
+        return make_response(jsonify({'Error': str(error)}), http.HTTPStatus.CONFLICT)
+    except Exception as error:
+        return make_response(jsonify({'Error': str(error)}), http.HTTPStatus.INTERNAL_SERVER_ERROR)
