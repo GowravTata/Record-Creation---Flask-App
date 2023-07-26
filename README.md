@@ -8,9 +8,9 @@ docker-compose up -d
 
 or 
 
-$$
-./run.sh
-$$
+
+`./run.sh`
+
 
 In your browser Navigate to 0.0.0.0:5000/docs
 
