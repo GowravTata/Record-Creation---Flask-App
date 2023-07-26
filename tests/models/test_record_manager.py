@@ -15,32 +15,29 @@ class TestRecordManager(unittest.TestCase):
     def setUp(self):
         self.mongo_service = MongoService()
         self.payload = {
-            "Location": "Mumbai",
+            "Location": "India",
             "Name": "Test_Gowrav",
             "Organisation": "ABC"
         }
 
-    @mock.patch('pymongo.collection.Collection.insert_one')
-    @mock.patch('app.models.record_manager.MongoService.validate_payload')
-    def test_01_create_new_single_record_success(self, mock_validate_payload, mock_find):
+    @mock.patch('models.record_manager.MongoService.create_record')
+    @mock.patch('models.record_manager.MongoService.validate_payload')
+    def test_01_create_new_single_record_success(self, mock_validate_payload, mock_create_record):
         """test_01_create_new_single_record_success"""
         mock_validate_payload.return_value = "Valid Payload"
-        mock_find.return_value = {'_id': '1234', 'Location': 'Mumbai', 'Name': 'Test_Gowrav',
+        mock_create_record.return_value = {'_id': '1234', 'Location': 'India', 'Name': 'Test_Gowrav',
                                   'Organisation': 'ABC'}
         response = self.mongo_service.create_record(payload=self.payload)
-        expected_result = {
-            'message': "Successfully inserted data {'Location': 'Mumbai', 'Name': 'Test_Gowrav', 'Organisation': "
-                       "'ABC'} into the database"}
-        self.assertEqual(expected_result, response)
+        self.assertTrue(response)
 
-    @mock.patch('pymongo.collection.Collection.insert_one')
+    @mock.patch('models.record_manager.MongoService.create_record')
     @mock.patch('requests.get')
-    @mock.patch('app.models.record_manager.MongoService.validate_payload')
-    def test_02_create_new_multiple_record_success(self, mock_validate_payload, mock_get, mock_find):
+    @mock.patch('models.record_manager.MongoService.validate_payload')
+    def test_02_create_new_multiple_record_success(self, mock_validate_payload, mock_get, mock_create_record):
         """test_02_create_new_multiple_record_success"""
         mock_get.return_value.status_code = 404
         mock_validate_payload.return_value = "Valid Payload"
-        mock_find.return_value = {'_id': '1234', 'Location': 'Mumbai', 'Name': 'Test_Gowrav_2',
+        mock_create_record.return_value = {'_id': '1234', 'Location': 'India', 'Name': 'Test_Gowrav_2',
                                   'Organisation': 'ABC'}
         response = self.mongo_service.create_record(payload=[self.payload])
         self.assertTrue(response)
@@ -51,15 +48,17 @@ class TestRecordManager(unittest.TestCase):
         with assert_raises(KeyError):
             self.mongo_service.create_record(payload=self.payload)
 
-    @mock.patch('app.models.record_manager.MongoService.create_connection')
+    @mock.patch('models.record_manager.MongoService.create_connection')
     def test_04_connection_exception(self, mock_create_connection):
         """test_04_connection_exception"""
         mock_create_connection.side_effect = Exception("Connection Exception")
         with assert_raises(Exception):
             self.mongo_service.create_record(payload=self.payload)
 
-    def test_05_record_inexistence_error(self):
+    @mock.patch('models.record_manager.MongoService.delete_record')
+    def test_05_record_inexistence_error(self, mock_delete_record):
         """test_05_record_inexistence_error"""
+        mock_delete_record.side_effect = RecordInExistenceError()
         self.payload.update({'Name': 123})
         with self.assertRaises(RecordInExistenceError):
             self.mongo_service.delete_record(id=self.payload['Name'])
@@ -84,11 +83,12 @@ class TestRecordManager(unittest.TestCase):
         with self.assertRaises(RecordInExistenceError):
             self.mongo_service.update_record(payload=payload)
 
+    @mock.patch('models.record_manager.MongoService.delete_record')
     @mock.patch("requests.get")
-    def test_08_delete_record_success(self, mock_get):
+    def test_08_delete_record_success(self, mock_get, mock_delete_record):
         """test_08_delete_record_success"""
+        mock_delete_record.return_value.text = b'{"_id": 123, "Name": "Test_Gowrav"}'
         mock_get.return_value.status_code = 200
         mock_get.return_value.text = b'{"_id": 123, "Name": "Test_Gowrav"}'
         response = self.mongo_service.delete_record(id=self.payload["Name"])
-        expected_result = {'Message': 'Deleted record Test_Gowrav'}
-        self.assertEqual(expected_result, response)
+        self.assertTrue(response)

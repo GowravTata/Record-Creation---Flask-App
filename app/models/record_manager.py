@@ -45,14 +45,14 @@ class MongoService:
                 for record in payload:
                     self.validate_payload(payload=record)
                     url = self.get_url.format(record["Name"])
-                    response = requests.get(url=url, timeout=20)
+                    response = requests.get(url=url, timeout=1)
                     if response.status_code == 200:
                         raise RecordExistenceError(f'Record {record} already exists')
                 connection.insert_many(payload)
             else:
                 self.validate_payload(payload)
                 url = self.get_url.format(payload["Name"])
-                response = requests.get(url=url, timeout=20)
+                response = requests.get(url=url, timeout=1)
                 if response.status_code == 200:
                     msg = f'Record {payload["Name"]} already exists'
                     raise RecordExistenceError(msg)
@@ -95,7 +95,7 @@ class MongoService:
             msg = "Requires one or more attributes to update the payload"
             raise InvalidPayloadException(msg)
         url = self.get_url.format(payload["Name"])
-        response = requests.get(url=url, timeout=20)
+        response = requests.get(url=url, timeout=1)
         if response.status_code == 404:
             msg = f'Record {payload["Name"]} doesnt exists'
             raise RecordInExistenceError(msg)
@@ -114,10 +114,10 @@ class MongoService:
         """
         connection = self.create_connection()
         url = self.get_url.format(id)
-        response = requests.get(url=url, timeout=20)
+        response = requests.get(url=url, timeout=1)
         if response.status_code == 200:
             record = json.loads(response.text)
-            del record["_id"]
+            #del record["_id"]
             connection.delete_one(record)
             msg = {"Message": f"Deleted record {id}"}
             return msg
