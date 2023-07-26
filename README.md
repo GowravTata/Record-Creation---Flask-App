@@ -3,13 +3,18 @@ Run the command as follows
 
 
 ```console
+git clone https://github.com/GowravTata/Record-Creation---Flask-App.git
+cd Record-Creation---Flask-App
 docker-compose up -d
 ```
 
 or 
 
 
-`./run.sh`
+`
+git clone https://github.com/GowravTata/Record-Creation---Flask-App.git
+cd Record-Creation---Flask-App
+./run.sh`
 
 
 In your browser Navigate to 0.0.0.0:5000/docs
