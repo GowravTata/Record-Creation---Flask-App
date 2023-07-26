@@ -1,3 +1,6 @@
+"""All exceptions in the python"""
+
+
 class RecordExistenceError(Exception):
     """exception to be raised when the record already exists"""
 
@@ -8,4 +11,3 @@ class RecordInExistenceError(Exception):
 
 class InvalidPayloadException(Exception):
     """exception to be raised when the payload sent is invalid"""
-

@@ -1,9 +1,16 @@
-from pymongo import MongoClient
+"""
+Python file consisting all the logic
+"""
+# Standard Library
 import json
-from bson import json_util
+
+# Third Party Library
 import requests
-from app.models.exceptions import RecordExistenceError, RecordInExistenceError, \
-    InvalidPayloadException
+from bson import json_util
+from pymongo import MongoClient
+
+# Custom Library
+from app.models.exceptions import InvalidPayloadException, RecordExistenceError, RecordInExistenceError
 
 
 class MongoService:
@@ -13,15 +20,18 @@ class MongoService:
 
     @staticmethod
     def create_connection():
+        """
+        Method to connect to the MongoDB instance
+        """
         try:
             conn = MongoClient('mongo', 27017)
             # creating a database
-            db = conn.database
+            database = conn.database
             # creating a collection under the database
-            return db.my_test_database
-        except Exception as e:
-            msg = f'Failed to establish a connection. Error:{e}'
-            raise Exception(msg)
+            return database.my_test_database
+        except Exception as error:
+            msg = f'Failed to establish a connection. Error:{error}'
+            raise Exception(msg) from error
 
     def create_record(self, payload: dict or list) -> dict:
         """
@@ -35,27 +45,27 @@ class MongoService:
                 for record in payload:
                     self.validate_payload(payload=record)
                     url = self.get_url.format(record["Name"])
-                    response = requests.get(url=url)
+                    response = requests.get(url=url, timeout=20)
                     if response.status_code == 200:
                         raise RecordExistenceError(f'Record {record} already exists')
                 connection.insert_many(payload)
             else:
                 self.validate_payload(payload)
                 url = self.get_url.format(payload["Name"])
-                response = requests.get(url=url)
+                response = requests.get(url=url, timeout=20)
                 if response.status_code == 200:
                     msg = f'Record {payload["Name"]} already exists'
                     raise RecordExistenceError(msg)
                 connection.insert_one(payload)
             msg = {"message": f"Successfully inserted data {payload} into the database"}
             return msg
-        except KeyError as e:
-            raise KeyError(e.args[0])
-        except RecordExistenceError as e:
-            raise RecordExistenceError(e)
-        except Exception as e:
-            msg = f"Encountered exception while creating record. Error:{e}"
-            raise Exception(msg)
+        except KeyError as error:
+            raise KeyError(error.args[0]) from error
+        except RecordExistenceError as error:
+            raise RecordExistenceError(error) from error
+        except Exception as error:
+            msg = f"Encountered exception while creating record. Error:{error}"
+            raise Exception(msg) from error
 
     def fetch_record(self, id=None) -> list or dict:
         """
@@ -85,7 +95,7 @@ class MongoService:
             msg = "Requires one or more attributes to update the payload"
             raise InvalidPayloadException(msg)
         url = self.get_url.format(payload["Name"])
-        response = requests.get(url=url)
+        response = requests.get(url=url, timeout=20)
         if response.status_code == 404:
             msg = f'Record {payload["Name"]} doesnt exists'
             raise RecordInExistenceError(msg)
@@ -104,7 +114,7 @@ class MongoService:
         """
         connection = self.create_connection()
         url = self.get_url.format(id)
-        response = requests.get(url=url)
+        response = requests.get(url=url, timeout=20)
         if response.status_code == 200:
             record = json.loads(response.text)
             del record["_id"]
@@ -116,6 +126,9 @@ class MongoService:
 
     @staticmethod
     def validate_payload(payload: dict) -> str:
+        """
+        Method to check if all the keys in the payload exists
+        """
         required_keys = ("Name", "Organisation", "Location")
         for key in required_keys:
             if key not in payload.keys():
