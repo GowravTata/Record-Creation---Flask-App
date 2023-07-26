@@ -1,7 +1,9 @@
 Clone the branch 
 Run the commands are as follows
-1. docker build -t recordapp . 
-2. docker-compose up -d
+
+```bash
+docker-compose up -d
+```
 
 In your browser Navigate to 0.0.0.0:5000/docs
 
