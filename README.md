@@ -12,8 +12,8 @@ or
 
 
 `
-git clone https://github.com/GowravTata/Record-Creation---Flask-App.git
-cd Record-Creation---Flask-App
+git clone https://github.com/GowravTata/Record-Creation---Flask-App.git \n
+cd Record-Creation---Flask-App \n
 ./run.sh`
 
 
