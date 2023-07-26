@@ -9,12 +9,12 @@ from app.models.exceptions import RecordExistenceError, RecordInExistenceError, 
 class MongoService:
 
     def __init__(self):
-        self.get_url = "http://127.0.0.1:5000/record/{}"
+        self.get_url = "http://0.0.0.0:5000/record/{}"
 
     @staticmethod
     def create_connection():
         try:
-            conn = MongoClient('localhost', 27017)
+            conn = MongoClient('mongo', 27017)
             # creating a database
             db = conn.database
             # creating a collection under the database

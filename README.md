@@ -1,17 +1,9 @@
-If using Docker
+Clone the branch 
+Run the commands are as follows
+1. docker build -t recordapp . 
+2. docker-compose up -d
 
-The commands are as follows
-
-1. sudo docker build -t recordapp . 
-2. sudo docker container run -d -p 5000:5000 recordapp
-
-In your browser Navigate to localhost:5000/docs
-
-Note: Currently MongoDB is not containerized, MongoDB has to be present in Local for working of this repository
-Clone the branch \
-Install the packages in requirements.txt file\
-Run the server \
-Navigate to http://127.0.0.1:5000/docs and everything is self explanatory 
+In your browser Navigate to 0.0.0.0:5000/docs
 
 Swagger: 
 

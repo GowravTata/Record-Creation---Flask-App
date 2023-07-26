@@ -2,8 +2,8 @@ openapi: 3.0.1
 info:
   title: Record Management Service
   version: 3.0.1
-servers:
-  - url: http://127.0.0.1:5000/
+#servers:
+#  - url: http://127.0.0.1:5000/
 paths:
   /heartbeat:
     get:
@@ -39,7 +39,7 @@ paths:
               properties:
                 order:
                   type: "object"
-              example: { "Name": "Gowrav Tata","Organisation": "LTTS","Location": "Hyderabad" }
+              example: { "Name": "Gowrav","Organisation": "ABC","Location": "India" }
         required: true
       responses:
         200:
@@ -64,7 +64,7 @@ paths:
               properties:
                 order:
                   type: "object"
-              example: { "Name": "Gowrav Tata","Organisation": "LTI","Location": "Hyderabad" }
+              example: { "Name": "Gowrav","Organisation": "ABC","Location": "India" }
         required: true
       responses:
         200:
@@ -119,7 +119,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: ID of pet to return
+          description: ID of record to be fetched
           required: true
           schema:
             type: string
