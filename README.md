@@ -1,9 +1,16 @@
 Clone the branch 
-Run the commands are as follows
+Run the command as follows
 
-```bash
+
+```console
 docker-compose up -d
 ```
+
+or 
+
+$$
+./run.sh
+$$
 
 In your browser Navigate to 0.0.0.0:5000/docs
 
