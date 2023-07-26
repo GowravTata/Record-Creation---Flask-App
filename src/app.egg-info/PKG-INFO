@@ -1,0 +1,12 @@
+Metadata-Version: 2.1
+Name: app
+Version: 0.1.0
+Author: Gowrav Tata
+Author-email: gowravsaitata@gmail.com
+Classifier: Programming Language :: Python
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: SysAdmins
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Python: ~=3.8
+License-File: LICENSE

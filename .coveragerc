@@ -1,0 +1,16 @@
+[run]
+branch = True
+source =
+    src
+
+
+[paths]
+source =
+   src/app
+   .tox/*/lib/python*/site-packages/app
+omit =
+    *__init__.py
+
+[report]
+show_missing = True
+precision = 2

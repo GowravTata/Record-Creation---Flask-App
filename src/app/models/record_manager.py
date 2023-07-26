@@ -5,28 +5,24 @@ Python file consisting all the logic
 import json
 
 # Third Party Library
-import requests
 from bson import json_util
 from pymongo import MongoClient
-
-# Custom Library
-from app.models.exceptions import InvalidPayloadException, RecordExistenceError, RecordInExistenceError
+from src.app.models.exceptions import InvalidPayloadException, RecordExistenceError, RecordInExistenceError
 
 
 class MongoService:
-
-    def __init__(self):
-        self.get_url = "http://0.0.0.0:5000/record/{}"
-
+    """
+    Class to connect with MongoDB and perform operations
+    """
     @staticmethod
     def create_connection():
         """
         Method to connect to the MongoDB instance
         """
         try:
-            conn = MongoClient('mongo', 27017)
+            connection = MongoClient('mongo', 27017)
             # creating a database
-            database = conn.database
+            database = connection.database
             # creating a collection under the database
             return database.my_test_database
         except Exception as error:
@@ -44,16 +40,14 @@ class MongoService:
             if isinstance(payload, list):
                 for record in payload:
                     self.validate_payload(payload=record)
-                    url = self.get_url.format(record["Name"])
-                    response = requests.get(url=url, timeout=1)
-                    if response.status_code == 200:
+                    record = connection.find_one({"Name": f"{payload['Name']}"})
+                    if record:
                         raise RecordExistenceError(f'Record {record} already exists')
                 connection.insert_many(payload)
             else:
                 self.validate_payload(payload)
-                url = self.get_url.format(payload["Name"])
-                response = requests.get(url=url, timeout=1)
-                if response.status_code == 200:
+                record = connection.find_one({"Name": f"{payload['Name']}"})
+                if record:
                     msg = f'Record {payload["Name"]} already exists'
                     raise RecordExistenceError(msg)
                 connection.insert_one(payload)
@@ -94,12 +88,11 @@ class MongoService:
         if len(payload) < 2:
             msg = "Requires one or more attributes to update the payload"
             raise InvalidPayloadException(msg)
-        url = self.get_url.format(payload["Name"])
-        response = requests.get(url=url, timeout=1)
-        if response.status_code == 404:
+        connection = self.create_connection()
+        record = connection.find_one({"Name": f"{payload['Name']}"})
+        if not record:
             msg = f'Record {payload["Name"]} doesnt exists'
             raise RecordInExistenceError(msg)
-        connection = self.create_connection()
         filters = {"Name": payload["Name"]}
         new_values = {"$set": payload}
         connection.update_one(filters, new_values)
@@ -113,11 +106,10 @@ class MongoService:
             :return: string consisting of the deleted status
         """
         connection = self.create_connection()
-        url = self.get_url.format(id)
-        response = requests.get(url=url, timeout=1)
-        if response.status_code == 200:
-            record = json.loads(response.text)
-            #del record["_id"]
+        record = connection.find_one({"Name": f"{id}"})
+        if record:
+            record = json.loads(json_util.dumps(record))
+            del record["_id"]
             connection.delete_one(record)
             msg = {"Message": f"Deleted record {id}"}
             return msg

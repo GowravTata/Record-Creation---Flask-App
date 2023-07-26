@@ -7,8 +7,8 @@ setup(
     author="Gowrav Tata",
     author_email="gowravsaitata@gmail.com",
     python_requires="~=3.8",
-    package_dir={"": "app"},
-    packages=find_packages(where="app"),
+    package_dir={"": "src"},
+    packages=find_packages(where="src"),
     zip_safe=False,
     classifiers=[
         "Programming Language :: Python",

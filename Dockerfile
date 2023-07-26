@@ -7,6 +7,9 @@ WORKDIR /work
 #copy the contents to the working dir
 COPY . /work
 
+# Setting the path for env variable
+ENV PYTHONPATH=~/work/app/
+
 #running all the dependencies
 RUN pip install --upgrade pip
 

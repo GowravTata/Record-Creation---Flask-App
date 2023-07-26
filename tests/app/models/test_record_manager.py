@@ -20,25 +20,25 @@ class TestRecordManager(unittest.TestCase):
             "Organisation": "ABC"
         }
 
-    @mock.patch('models.record_manager.MongoService.create_record')
-    @mock.patch('models.record_manager.MongoService.validate_payload')
+    @mock.patch('app.models.record_manager.MongoService.create_record')
+    @mock.patch('app.models.record_manager.MongoService.validate_payload')
     def test_01_create_new_single_record_success(self, mock_validate_payload, mock_create_record):
         """test_01_create_new_single_record_success"""
         mock_validate_payload.return_value = "Valid Payload"
         mock_create_record.return_value = {'_id': '1234', 'Location': 'India', 'Name': 'Test_Gowrav',
-                                  'Organisation': 'ABC'}
+                                           'Organisation': 'ABC'}
         response = self.mongo_service.create_record(payload=self.payload)
         self.assertTrue(response)
 
-    @mock.patch('models.record_manager.MongoService.create_record')
+    @mock.patch('app.models.record_manager.MongoService.create_record')
     @mock.patch('requests.get')
-    @mock.patch('models.record_manager.MongoService.validate_payload')
+    @mock.patch('app.models.record_manager.MongoService.validate_payload')
     def test_02_create_new_multiple_record_success(self, mock_validate_payload, mock_get, mock_create_record):
         """test_02_create_new_multiple_record_success"""
         mock_get.return_value.status_code = 404
         mock_validate_payload.return_value = "Valid Payload"
         mock_create_record.return_value = {'_id': '1234', 'Location': 'India', 'Name': 'Test_Gowrav_2',
-                                  'Organisation': 'ABC'}
+                                           'Organisation': 'ABC'}
         response = self.mongo_service.create_record(payload=[self.payload])
         self.assertTrue(response)
 
@@ -48,14 +48,14 @@ class TestRecordManager(unittest.TestCase):
         with assert_raises(KeyError):
             self.mongo_service.create_record(payload=self.payload)
 
-    @mock.patch('models.record_manager.MongoService.create_connection')
+    @mock.patch('app.models.record_manager.MongoService.create_connection')
     def test_04_connection_exception(self, mock_create_connection):
         """test_04_connection_exception"""
         mock_create_connection.side_effect = Exception("Connection Exception")
         with assert_raises(Exception):
             self.mongo_service.create_record(payload=self.payload)
 
-    @mock.patch('models.record_manager.MongoService.delete_record')
+    @mock.patch('app.models.record_manager.MongoService.delete_record')
     def test_05_record_inexistence_error(self, mock_delete_record):
         """test_05_record_inexistence_error"""
         mock_delete_record.side_effect = RecordInExistenceError()
@@ -83,7 +83,7 @@ class TestRecordManager(unittest.TestCase):
         with self.assertRaises(RecordInExistenceError):
             self.mongo_service.update_record(payload=payload)
 
-    @mock.patch('models.record_manager.MongoService.delete_record')
+    @mock.patch('app.models.record_manager.MongoService.delete_record')
     @mock.patch("requests.get")
     def test_08_delete_record_success(self, mock_get, mock_delete_record):
         """test_08_delete_record_success"""

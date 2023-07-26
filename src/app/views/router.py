@@ -9,11 +9,9 @@ from datetime import timedelta
 from flask import Flask, jsonify, make_response, request
 from flask_httpauth import HTTPBasicAuth
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required
+from src.app.models.exceptions import InvalidPayloadException, RecordExistenceError, RecordInExistenceError
+from src.app.models.record_manager import MongoService
 from swagger_ui import api_doc
-
-# Custom Library
-from app.models.exceptions import InvalidPayloadException, RecordExistenceError, RecordInExistenceError
-from app.models.record_manager import MongoService
 
 ACCESS_EXPIRES = timedelta(hours=1)
 
@@ -22,7 +20,7 @@ app.config["JWT_SECRET_KEY"] = "super-secret"
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = ACCESS_EXPIRES
 jwt = JWTManager(app)
 
-api_doc(app, config_path='app/views/swagger.yaml', url_prefix='/docs', title='API doc')
+api_doc(app, config_path='src/app/views/swagger.yaml', url_prefix='/docs', title='API doc')
 
 auth = HTTPBasicAuth()
 
