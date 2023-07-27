@@ -3,7 +3,7 @@
 set -e
 
 # Clone the repository
-echo "Checking for existing dataflow-automation folders, recreating the dataflow-automation repo"
+echo "Checking for existing record_creation_flask_app folder , recreating the record_creation_flask_app repo"
 if [ -d ~/record_creation_flask_app/ ]; then
   rm -rf record_creation_flask_app
 fi
